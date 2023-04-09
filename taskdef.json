@@ -1,0 +1,101 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:ap-southeast-1:182155805005:task-definition/ecs-task:6",
+    "containerDefinitions": [
+        {
+            "name": "ecs-production-container",
+            "image": "<IMAGE1_NAME>",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true,
+            "secrets": [
+                {
+                    "name": "MONGO_HOST",
+                    "valueFrom": "arn:aws:ssm:ap-southeast-1:182155805005:parameter/production/mongodb/host"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "ecs-production-logs",
+                    "awslogs-region": "ap-southeast-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ],
+    "family": "ecs-task",
+    "taskRoleArn": "arn:aws:iam::182155805005:role/ecs-execution-task-role",
+    "executionRoleArn": "arn:aws:iam::182155805005:role/ecs-execution-task-role",
+    "networkMode": "awsvpc",
+    "revision": 6,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512",
+    "registeredAt": "2023-03-29T06:31:35.165Z",
+    "registeredBy": "arn:aws:iam::182155805005:user/ajquiambao",
+    "tags": [
+        {
+            "key": "TFProject",
+            "value": "github.com/justadevopsguy/ecs-bluegreen-deployment//terraform/aws/production/ap-southeast-1/network/vpc/ecs-production"
+        },
+        {
+            "key": "Environment",
+            "value": "production"
+        },
+        {
+            "key": "Owner",
+            "value": "ajq"
+        },
+        {
+            "key": "ManagedBy",
+            "value": "terraform"
+        },
+        {
+            "key": "Name",
+            "value": "ecs-ecs-td"
+        }
+    ]
+}

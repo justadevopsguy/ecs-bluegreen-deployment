@@ -1,0 +1,51 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: ap-southeast-1
+    AWS_ACCOUNT_ID: 182155805005
+    IMAGE_NAME: node/ecs
+    
+phases:
+  install:
+    runtime-versions:
+      nodejs: 16
+    commands:
+  pre_build:
+    commands:
+      - echo  Installing   source NPM dependencies...
+      - cd app/
+      - npm install
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      - VERSION=$(jq -r '.version' package.json)
+      - echo "Package version = $VERSION"     
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Compiling the Node.js code
+  post_build:
+    commands:
+      - docker build --no-cache --platform linux/amd64 -t $IMAGE_NAME:$VERSION .
+      - docker tag $IMAGE_NAME:$VERSION $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$VERSION
+      - echo image name =  $IMAGE_NAME:$VERSION
+      - echo image url = $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$VERSION
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME:$VERSION
+      - echo Writing image definitions file...
+      - printf '{"ImageURI":"'"$AWS_ACCOUNT_ID"'.dkr.ecr.'"$AWS_REGION"'.amazonaws.com/'"$IMAGE_NAME"':'"$VERSION"'"}' > ../imageDetail.json
+      - cat ../imageDetail.json
+      - echo Build completed on `date`
+      - ls -la
+artifacts:
+  files: 
+    - 'imageDetail.json'
+    - 'appspec.yaml'
+    - 'taskdef.json'
+  secondary-artifacts:
+    DefinitionArtifact:
+      files:
+        - appspec.yaml
+        - taskdef.json
+    ImageArtifact:
+      files:
+        - imageDetail.json

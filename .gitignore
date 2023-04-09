@@ -1,0 +1,16 @@
+#  Local .terraform directories
+**/.terraform/*
+
+# .lock.hcl files for terraform version > 0.14
+*.terraform.lock.hcl
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+*/**/.DS_Store
+
+# vscode
+.vscode
+
+node_modules

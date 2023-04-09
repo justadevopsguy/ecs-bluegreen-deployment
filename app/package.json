@@ -1,0 +1,15 @@
+{
+  "name": "docker_web_app",
+  "version": "1.0.0",
+  "description": "Node.js on Docker",
+  "author": "AJ Quiambao",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "access-log": "^0.4.1",
+    "express": "^4.16.1",
+    "mongoose-morgan": "^1.0.17"
+  }
+}
